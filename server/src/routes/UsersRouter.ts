@@ -1,4 +1,5 @@
 import UsersController from "@/controllers/UsersController";
+import { isLoggedIn } from "@/middlewares/auth";
 import { VerifyPayload } from "@/middlewares/zod";
 import { Router } from "express";
 import { z } from "zod";
@@ -13,6 +14,8 @@ const UserPayload = z.object({
   phoneNumber: z.string(),
   password: z.string(),
 });
+
+router.use(isLoggedIn);
 
 router.get("/", UsersController.getAll);
 
