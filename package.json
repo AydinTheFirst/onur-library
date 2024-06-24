@@ -1,0 +1,22 @@
+{
+  "name": "fullstack-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd server && npm run start",
+    "install": "cd client && pnpm install && cd ../server && pnpm install",
+    "dev": "concurrently -r \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "cd client && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "cd client && npm run lint && cd ../server && npm run lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
