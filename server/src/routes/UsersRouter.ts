@@ -1,5 +1,5 @@
 import UsersController from "@/controllers/UsersController";
-import { isLoggedIn } from "@/middlewares/auth";
+import { isAdmin, isLoggedIn } from "@/middlewares/auth";
 import { VerifyPayload } from "@/middlewares/zod";
 import { Router } from "express";
 import { z } from "zod";
@@ -13,6 +13,7 @@ const UserPayload = z.object({
   email: z.string(),
   phoneNumber: z.string(),
   password: z.string(),
+  isAdmin: z.boolean().optional().default(false),
 });
 
 router.use(isLoggedIn);
@@ -20,6 +21,8 @@ router.use(isLoggedIn);
 router.get("/", UsersController.getAll);
 
 router.get("/:id", UsersController.getOne);
+
+router.use(isAdmin);
 
 router.post("/", VerifyPayload(UserPayload), UsersController.create);
 

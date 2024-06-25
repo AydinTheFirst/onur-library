@@ -1,4 +1,5 @@
 import LicensesController from "@/controllers/LicensesController";
+import { isAdmin } from "@/middlewares/auth";
 import { VerifyPayload } from "@/middlewares/zod";
 import { Router } from "express";
 import { z } from "zod";
@@ -16,6 +17,8 @@ const LicensePayload = z.object({
 router.get("/", LicensesController.find);
 
 router.get("/:id", LicensesController.findOne);
+
+router.use(isAdmin);
 
 router.post("/", VerifyPayload(LicensePayload), LicensesController.create);
 

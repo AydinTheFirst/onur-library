@@ -3,7 +3,14 @@ import { HomeLayout } from "@/layouts/HomeLayout";
 import { http, httpError } from "@/lib/http";
 import { User } from "@/types";
 import { sleep } from "@/utils";
-import { Card, CardBody, Input, Button } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  Input,
+  Button,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -64,6 +71,19 @@ const ViewUser = () => {
                 defaultValue={user?.phoneNumber}
                 isRequired
               />
+
+              <Select
+                label="Admin"
+                name="isAdmin"
+                defaultSelectedKeys={[user?.isAdmin ? "true" : "false"]}
+              >
+                <SelectItem key={"true"} value="true">
+                  Evet
+                </SelectItem>
+                <SelectItem key={"false"} value="false">
+                  Hayır
+                </SelectItem>
+              </Select>
 
               <Input
                 label="Şifre"

@@ -1,4 +1,5 @@
 import BooksController from "@/controllers/BooksController";
+import { isAdmin } from "@/middlewares/auth";
 import { VerifyPayload } from "@/middlewares/zod";
 import { Router } from "express";
 import { z } from "zod";
@@ -19,6 +20,8 @@ const BookSchema = z.object({
 router.get("/", BooksController.find);
 
 router.get("/:id", BooksController.findOne);
+
+router.use(isAdmin);
 
 router.post("/", VerifyPayload(BookSchema), BooksController.create);
 
