@@ -1,4 +1,5 @@
 import config from "@/config";
+import { sleep } from "@/utils";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -12,10 +13,12 @@ export const http = axios.create({
 
 export const fetcher = (url: string) => http.get(url).then((res) => res.data);
 
-export const httpError = (error: any) => {
+export const httpError = async (error: any) => {
   if (error.response.status === 401) {
-    location.href = "/login";
+    toast.error("Tekrar giriş yapmanız için yönlendiriliyorsunuz...");
     localStorage.removeItem("token");
+    await sleep(2000);
+    location.replace("/login");
   }
 
   let errorMessage = "Something went wrong!";

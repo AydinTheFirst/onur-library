@@ -1,13 +1,10 @@
 import { PasswordInput } from "@/components/PasswordInput";
 import { http, httpError } from "@/lib/http";
-import { useNavigate } from "@/router";
 import { sleep } from "@/utils";
 import { Button, Card, CardBody, Input } from "@nextui-org/react";
 import { toast } from "sonner";
 
 const Login = () => {
-  const navigate = useNavigate();
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -17,7 +14,7 @@ const Login = () => {
       localStorage.setItem("token", res.data.token);
       toast.success("Giriş başarılı!");
       await sleep(1000);
-      navigate("/");
+      location.replace("/");
     } catch (error) {
       httpError(error);
     }

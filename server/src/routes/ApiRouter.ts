@@ -10,7 +10,6 @@ import { UsersRouter } from "./UsersRouter";
 import { BooksRouter } from "./Books";
 import { LicensesRouter } from "./Licenses";
 import { CategoriesRouter } from "./Categories";
-import { TokenModel } from "@/database/models/Token";
 
 const router = Router();
 export { router as ApiRouter };

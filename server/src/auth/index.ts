@@ -16,7 +16,6 @@ export const BearerAuth = async (
   const tokenDoc = await TokenModel.findOne({ token });
 
   if (!tokenDoc) return next();
-
   if (tokenDoc.expiresAt < Date.now()) return next();
 
   const user = await UserModel.findById(tokenDoc.userId);
