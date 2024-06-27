@@ -18,7 +18,7 @@ export const BookCard = ({ book }: { book: Book }) => {
           radius="lg"
           width="100%"
           alt={book.name}
-          className="h-[140px] w-full object-cover"
+          className="h-60 w-full object-cover"
           src={getFileUrl(book.images[0])}
         />
       </CardBody>
