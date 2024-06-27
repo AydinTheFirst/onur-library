@@ -2,9 +2,12 @@ import { PasswordInput } from "@/components/PasswordInput";
 import { http, httpError } from "@/lib/http";
 import { sleep } from "@/utils";
 import { Button, Card, CardBody, Input } from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
