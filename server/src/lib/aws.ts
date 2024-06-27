@@ -1,60 +1,50 @@
-import fs from "node:fs";
 import { S3 } from "@aws-sdk/client-s3";
 import { uuid } from "@/utils";
 
-const bucketName = process.env.AWS_BUCKET_NAME!;
+class AwsClient {
+  s3: S3;
+  bucketName = process.env.AWS_BUCKET_NAME!;
+  constructor() {
+    this.s3 = new S3({
+      region: "auto",
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+      },
+      endpoint: process.env.AWS_ENDPOINT,
+      maxAttempts: 3,
+    });
+  }
 
-const createStorageClient = () => {
-  return new S3({
-    region: "auto",
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-    },
-    endpoint: process.env.AWS_ENDPOINT,
-    maxAttempts: 3,
-  });
-};
+  uploadFile = async (file: Express.Multer.File) => {
+    const key = uuid();
 
-const uploadFile = async (file: Express.Multer.File) => {
-  const client = createStorageClient();
+    await this.s3.putObject({
+      Bucket: this.bucketName,
+      Key: key,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    });
 
-  const key = uuid();
+    return key;
+  };
 
-  await client.putObject({
-    Bucket: bucketName,
-    Key: key,
-    Body: file.buffer,
-    ContentType: file.mimetype,
-  });
+  deleteFile = async (Key: string) => {
+    const result = await this.s3.deleteObject({
+      Bucket: this.bucketName,
+      Key,
+    });
 
-  return key;
-};
+    return result;
+  };
 
-const deleteFile = async (Key: string) => {
-  const client = createStorageClient();
+  getFiles = async () => {
+    const result = await this.s3.listObjects({
+      Bucket: this.bucketName,
+    });
 
-  const result = await client.deleteObject({
-    Bucket: bucketName,
-    Key,
-  });
+    return result.Contents;
+  };
+}
 
-  return result;
-};
-
-const getFiles = async () => {
-  const client = createStorageClient();
-
-  const result = await client.listObjects({
-    Bucket: bucketName,
-  });
-
-  return result.Contents;
-};
-
-export const AWS = {
-  deleteFile,
-  uploadFile,
-  getFiles,
-  createStorageClient,
-};
+export const AWS = new AwsClient();
