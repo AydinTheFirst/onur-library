@@ -1,7 +1,8 @@
+import { Center } from "@/components/Center";
 import { PasswordInput } from "@/components/PasswordInput";
 import { http, httpError } from "@/lib/http";
 import { sleep } from "@/utils";
-import { Button, Card, CardBody, Input } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -24,39 +25,30 @@ const Login = () => {
   };
 
   return (
-    <div className="container h-screen">
-      <div className="grid h-full place-items-center">
-        <Card className="w-full max-w-md">
-          <CardBody>
-            <form onSubmit={handleSubmit} className="grid gap-3">
-              <Input
-                label="Mail / Kullanıcı Adı"
-                name="username"
-                type="text"
-                placeholder="Mail / Kullanıcı Adı"
-                isRequired
-              />
+    <Center>
+      <form onSubmit={handleSubmit} className="grid gap-3">
+        <Input
+          label="Mail / Kullanıcı Adı"
+          name="username"
+          type="text"
+          placeholder="Mail / Kullanıcı Adı"
+          isRequired
+        />
 
-              <PasswordInput label="Şifre" name="password" isRequired />
+        <PasswordInput label="Şifre" name="password" isRequired />
 
-              <Button type="submit" color="primary">
-                Giriş Yap
-              </Button>
-            </form>
-            <br />
-            <p className="text-center">
-              Hesabınız yok mu?{" "}
-              <button
-                onClick={() => navigate("/register")}
-                className="text-primary"
-              >
-                Kayıt ol
-              </button>
-            </p>
-          </CardBody>
-        </Card>
-      </div>
-    </div>
+        <Button type="submit" color="primary">
+          Giriş Yap
+        </Button>
+      </form>
+      <br />
+      <p className="text-center">
+        Hesabınız yok mu?{" "}
+        <button onClick={() => navigate("/register")} className="text-primary">
+          Kayıt ol
+        </button>
+      </p>
+    </Center>
   );
 };
 

@@ -1,5 +1,6 @@
 import { BearerAuth } from "@/auth";
 import AuthController from "@/controllers/AuthController";
+import { isLoggedIn } from "@/middlewares/auth";
 import { VerifyPayload } from "@/middlewares/zod";
 import { Router } from "express";
 import { z } from "zod";
@@ -20,7 +21,7 @@ const RegisterSchema = z.object({
   password: z.string(),
 });
 
-router.get("/@me", AuthController.getMe);
+router.get("/@me", isLoggedIn, AuthController.getMe);
 
 router.post("/login", VerifyPayload(LoginSchema), AuthController.login);
 

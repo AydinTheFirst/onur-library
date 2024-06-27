@@ -6,6 +6,8 @@ import {
   Autocomplete,
   AutocompleteItem,
   AutocompleteSection,
+  Card,
+  CardBody,
 } from "@nextui-org/react";
 import React, { Key, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
@@ -43,34 +45,48 @@ export const Books = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <h1>Books</h1>
-
-        <div className="flex gap-3">
-          <Autocomplete
-            placeholder="Kategori seçin"
-            onSelectionChange={(key: Key | null) => handleCategoryChange(key!)}
-          >
-            <AutocompleteItem key="all" value="">
-              Tümü
-            </AutocompleteItem>
-            <AutocompleteSection>
-              {categories.map((category) => (
-                <AutocompleteItem key={category._id} value={category._id}>
-                  {category.name}
+      <Card>
+        <CardBody>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-semibold">
+              Kitaplar{" "}
+              <span
+                className="text-sm font-normal text-gray-500"
+                title="Toplam kitap sayısı"
+              >
+                ({filteredBooks.length}/{books.length})
+              </span>
+            </h1>
+            <div className="flex gap-3">
+              <Autocomplete
+                placeholder="Kategori seçin"
+                onSelectionChange={(key: Key | null) =>
+                  handleCategoryChange(key!)
+                }
+                variant="faded"
+              >
+                <AutocompleteItem key="all" value="">
+                  Tümü
                 </AutocompleteItem>
-              ))}
-            </AutocompleteSection>
-          </Autocomplete>
+                <AutocompleteSection>
+                  {categories.map((category) => (
+                    <AutocompleteItem key={category._id} value={category._id}>
+                      {category.name}
+                    </AutocompleteItem>
+                  ))}
+                </AutocompleteSection>
+              </Autocomplete>
 
-          <Input
-            placeholder="Search books..."
-            startContent={<FaSearch />}
-            className="w-[200px]"
-            onChange={handleSearch}
-          />
-        </div>
-      </div>
+              <Input
+                placeholder="Kitap ara"
+                startContent={<FaSearch />}
+                onChange={handleSearch}
+                variant="faded"
+              />
+            </div>
+          </div>
+        </CardBody>
+      </Card>
       <br />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {filteredBooks.map((book) => (

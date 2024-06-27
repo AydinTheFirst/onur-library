@@ -15,10 +15,10 @@ const ViewBook = () => {
       <div className="grid place-items-center">
         <Card className="w-full max-w-xl">
           <CardBody className="grid gap-3">
-            <Input label="Name" value={book.name} isReadOnly />
-            <Input label="Author" value={book.author} isReadOnly />
+            <Input label="İsim" value={book.name} isReadOnly />
+            <Input label="Yazar" value={book.author} isReadOnly />
 
-            <Input label="Category" value={book.category.name} isReadOnly />
+            <Input label="Kategori" value={book.category.name} isReadOnly />
 
             <Input
               label="Bulunduğu Dolap"
