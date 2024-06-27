@@ -1,3 +1,5 @@
+import config from "@/config";
+
 export const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
@@ -11,4 +13,8 @@ export const generateKey = (len?: number) => {
     key += charset.charAt(Math.floor(Math.random() * charset.length));
   }
   return key;
+};
+
+export const getFileUrl = (file: string) => {
+  return config.CDN + file;
 };

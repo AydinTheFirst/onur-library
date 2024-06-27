@@ -30,4 +30,8 @@ router.post("/", VerifyPayload(BookSchema), BooksController.create);
 
 router.put("/:id", VerifyPayload(BookSchema), BooksController.update);
 
+router.patch("/:id/images", BooksController.updateImages);
+
 router.delete("/:id", BooksController.delete);
+
+router.delete("/:id/images/:image", BooksController.deleteImage);

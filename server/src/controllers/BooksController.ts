@@ -1,5 +1,6 @@
 import { BookModel } from "@/database/models/Book";
 import { CategoryModel } from "@/database/models/Category";
+import { AWS } from "@/lib/aws";
 import { NotFoundError } from "@/lib/express";
 import { Request, Response } from "express";
 import qrCode from "qrcode";
@@ -55,11 +56,45 @@ class BooksController {
     return res.send(model);
   }
 
+  async updateImages(req: Request, res: Response) {
+    const { id } = req.params;
+    const model = await BookModel.findById(id);
+    if (!model) return NotFoundError(res, "Book not found");
+
+    const files = req.files as Express.Multer.File[];
+
+    for (const file of files) {
+      const key = await AWS.uploadFile(file);
+      model.images.push(key);
+    }
+    await model.save();
+
+    return res.send(model);
+  }
+
   async delete(req: Request, res: Response) {
     const { id } = req.params;
     const model = await BookModel.findById(id);
-
     if (!model) return NotFoundError(res, "Book not found");
+
+    if (model.images.length > 0) {
+      for (const image of model.images) {
+        await AWS.deleteFile(image);
+      }
+    }
+  }
+
+  async deleteImage(req: Request, res: Response) {
+    const { id, image } = req.params;
+    const model = await BookModel.findById(id);
+    if (!model) return NotFoundError(res, "Book not found");
+
+    await AWS.deleteFile(image);
+    const images = model.images.filter((i) => i !== image);
+    model.images = images;
+    await model.save();
+
+    return res.send(model);
   }
 }
 

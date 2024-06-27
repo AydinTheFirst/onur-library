@@ -31,7 +31,7 @@ export const Navbar = () => {
     <Nav
       onMenuOpenChange={setIsMenuOpen}
       isBordered
-      className="bg-slate-100 text-slate-900 dark:bg-gray-950 dark:text-slate-100"
+      className="bg-slate-100 text-slate-900 dark:bg-[#18181b] dark:text-slate-100"
     >
       <NavbarContent>
         <NavbarMenuToggle

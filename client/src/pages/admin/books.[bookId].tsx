@@ -2,17 +2,21 @@ import { useHttp } from "@/hooks/useHttp";
 import { HomeLayout } from "@/layouts/HomeLayout";
 import { http, httpError } from "@/lib/http";
 import { Book, Category } from "@/types";
-import { sleep } from "@/utils";
+import { getFileUrl, sleep } from "@/utils";
 import {
   Button,
   Card,
   CardBody,
   Input,
+  Progress,
   Select,
   SelectItem,
 } from "@nextui-org/react";
+import { useState } from "react";
+import { FaTrash } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { mutate } from "swr";
 
 const ViewBook = () => {
   const navigate = useNavigate();
@@ -101,10 +105,95 @@ const ViewBook = () => {
                 Kaydet
               </Button>
             </form>
+            <br />
+            {book && <UpdateImages book={book} />}
           </CardBody>
         </Card>
       </div>{" "}
     </HomeLayout>
+  );
+};
+
+const UpdateImages = ({ book }: { book: Book }) => {
+  const [isLoading, setIsLoading] = useState(0);
+
+  const handleImagesSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    try {
+      await http.patch(`/books/${book._id}/images`, formData, {
+        onUploadProgress: (progressEvent) => {
+          setIsLoading((progressEvent.loaded / progressEvent.total!) * 100);
+        },
+      });
+      toast.success("Başarıyla kaydedildi");
+      await sleep(1000);
+      mutate(`/books/${book._id}`);
+    } catch (error) {
+      httpError(error);
+    }
+
+    setIsLoading(0);
+  };
+
+  const deleteImage = async (image: string) => {
+    const confirm = window.confirm("Silmek istediğinize emin misiniz?");
+    if (!confirm) return;
+
+    try {
+      await http.delete(`/books/${book._id}/images/${image}`);
+      toast.success("Başarıyla silindi");
+      await sleep(1000);
+      mutate(`/books/${book._id}`);
+    } catch (error) {
+      httpError(error);
+    }
+  };
+
+  if (isLoading > 0) {
+    return (
+      <div className="grid place-items-center">
+        <Progress
+          label={`Yükleniyor lütfen bekleyin...`}
+          value={isLoading}
+          showValueLabel
+        />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="grid grid-cols-4 gap-3">
+        {book.images.map((image) => (
+          <div className="relative">
+            <img
+              key={image}
+              src={getFileUrl(image)}
+              alt="resim"
+              className="h-32 w-32 object-cover"
+            />
+            <Button
+              color="danger"
+              size="sm"
+              className="absolute right-0 top-0"
+              isIconOnly
+              onClick={() => deleteImage(image)}
+            >
+              <FaTrash />
+            </Button>
+          </div>
+        ))}
+      </div>
+      <br />
+      <form onSubmit={handleImagesSubmit} className="grid gap-3">
+        <input type="file" name="images" accept="image/*" multiple />
+        <Button type="submit" color="primary" size="sm">
+          Resimleri Kaydet
+        </Button>
+      </form>
+    </>
   );
 };
 
